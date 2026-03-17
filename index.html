@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>My Budget Tracker</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background: #f8f9fa;
+            margin: 0;
+            padding: 16px;
+            color: #1e293b;
+        }
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0 0 8px 0;
+            color: #0f172a;
+        }
+        .subhead {
+            color: #475569;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 12px;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            flex: 1 0 auto;
+            background: #f1f5f9;
+            border: none;
+            padding: 12px 8px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 110px;
+        }
+        .tab-button.active {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 10px rgba(59,130,246,0.3);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e9eef2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .form-group {
+            flex: 1 1 140px;
+            min-width: 140px;
+        }
+        label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 40px;
+            font-size: 1rem;
+            background: white;
+            transition: 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        button.secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+            box-shadow: none;
+            border: 1.5px solid #cbd5e1;
+        }
+        button.warning {
+            background: #f97316;
+        }
+        button.warning:hover {
+            background: #ea580c;
+        }
+        .table-responsive {
+            overflow-x: auto;
+            margin: 16px 0;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 800px;
+        }
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            padding: 14px 8px;
+            text-align: left;
+            color: #334155;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .positive {
+            color: #16a34a;
+            font-weight: 500;
+        }
+        .negative {
+            color: #dc2626;
+            font-weight: 500;
+        }
+        .status-exceed {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 30px;
+            text-align: center;
+        }
+        .status-ontrack {
+            background-color: #dcfce7;
+            color: #166534;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 30px;
+            text-align: center;
+        }
+        .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+            justify-content: space-between;
+        }
+        .import-export {
+            display: flex;
+            gap: 8px;
+        }
+        #importFile {
+            display: none;
+        }
+        .total-row {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+        .month-selector {
+            margin-bottom: 20px;
+            max-width: 200px;
+        }
+        .github-section {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .token-input {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 40px;
+            font-size: 1rem;
+        }
+        .github-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .message {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #e2e8f0;
+        }
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <h1>My Budget Tracker</h1>
+    <div class="subhead">Take control of your finances</div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-button active" data-tab="expenses">Expenses This Month</button>
+        <button class="tab-button" data-tab="monthly">Monthly Summary</button>
+        <button class="tab-button" data-tab="yearly">Yearly Summary</button>
+        <button class="tab-button" data-tab="github">GitHub Sync</button>
+    </div>
+
+    <!-- Tab 1: Expenses This Month -->
+    <div id="tab-expenses" class="tab-content active">
+        <div class="card">
+            <div class="card-title">➕ Add New Expense</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="expDate">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="expCategory"></select>
+                </div>
+                <div class="form-group">
+                    <label>Subcategory</label>
+                    <select id="expSubcategory"></select>
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="expAmount" step="0.01" min="0" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="expDesc" placeholder="Optional">
+                </div>
+                <div class="form-group" style="flex: 0 0 100px;">
+                    <label>&nbsp;</label>
+                    <button id="addExpenseBtn">Add</button>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">📋 Expenses This Month</div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Category</th>
+                            <th>Subcategory</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="expensesBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 2: Monthly Summary -->
+    <div id="tab-monthly" class="tab-content">
+        <div class="card">
+            <div class="card-title">📊 Monthly Budget vs Actual</div>
+            <div class="month-selector">
+                <label for="monthSelector">Select Month:</label>
+                <select id="monthSelector"></select>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Subcategory</th>
+                            <th>Budget ($)</th>
+                            <th>Actual ($)</th>
+                            <th>Remaining ($)</th>
+                            <th>% Used</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthlySummaryBody"></tbody>
+                    <tfoot class="total-row">
+                        <tr>
+                            <td colspan="2"><strong>Total</strong></td>
+                            <td id="totalBudget">0</td>
+                            <td id="totalActual">0</td>
+                            <td id="totalRemaining">0</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 3: Yearly Summary -->
+    <div id="tab-yearly" class="tab-content">
+        <div class="card">
+            <div class="card-title">📆 Yearly Overview</div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Total Budget ($)</th>
+                            <th>Total Actual ($)</th>
+                            <th>Remaining ($)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="yearlyBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab 4: GitHub Sync -->
+    <div id="tab-github" class="tab-content">
+        <div class="card">
+            <div class="card-title">☁️ Sync with GitHub</div>
+            <p>Store your data in the <code>playpenaj/xtracker</code> repository as <code>data.json</code>.</p>
+            <div class="github-section">
+                <label for="githubToken">GitHub Personal Access Token</label>
+                <input type="password" id="githubToken" class="token-input" placeholder="ghp_xxxxxxxxxxxx">
+                <p class="note" style="color: #64748b; font-size: 0.85rem; margin-top: 4px;">Requires 'repo' scope. Never share your token.</p>
+
+                <div class="github-buttons">
+                    <button id="saveToGitHubBtn" class="warning">💾 Save to GitHub</button>
+                    <button id="loadFromGitHubBtn" class="warning">📂 Load from GitHub</button>
+                </div>
+
+                <div id="githubMessage" class="message" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+        <button class="secondary" id="resetBtn">Reset All Data</button>
+        <div class="import-export">
+            <button class="secondary" id="exportBtn">Export CSV</button>
+            <button class="secondary" id="importBtn">Import CSV</button>
+            <input type="file" id="importFile" accept=".csv">
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // ----- BUDGET DATA -----
+    const BUDGETS = [
+        { category: "Fixed Essentials", subcategory: "Rent", budget: 3300 },
+        { category: "Fixed Essentials", subcategory: "School Fees", budget: 1500 },
+        { category: "Fixed Essentials", subcategory: "Income Tax", budget: 900 },
+        { category: "Family Living", subcategory: "Utilities", budget: 250 },
+        { category: "Family Living", subcategory: "Mobile", budget: 50 },
+        { category: "Family Living", subcategory: "Internet", budget: 50 },
+        { category: "Family Living", subcategory: "Groceries", budget: 400 },
+        { category: "Family Living", subcategory: "Transport", budget: 150 },
+        { category: "Family Living", subcategory: "Eat Out", budget: 400 },
+        { category: "Family Living", subcategory: "Daughter Activities", budget: 200 },
+        { category: "Family Living", subcategory: "Wife Personal", budget: 250 },
+        { category: "Family Living", subcategory: "Household Items", budget: 50 },
+        { category: "Family Living", subcategory: "Medical", budget: 100 },
+        { category: "Family Living", subcategory: "Parents Support", budget: 400 },
+        { category: "Insurance", subcategory: "Insurance", budget: 280 },
+        { category: "Buffers", subcategory: "Emergency Fund", budget: 300 },
+        { category: "Buffers", subcategory: "Entertainment Buffer", budget: 150 },
+        { category: "Investment", subcategory: "Annual Goal", budget: 1250 }
+    ];
+
+    const TOTAL_BUDGET = BUDGETS.reduce((sum, item) => sum + item.budget, 0);
+    const categories = [...new Set(BUDGETS.map(b => b.category))].sort();
+
+    // ----- Local Storage -----
+    const STORAGE_KEY = 'budgetTrackerData';
+    let expenses = [];
+
+    // GitHub repo info – corrected to playpenaj/xtracker
+    const GITHUB_REPO = 'playpenaj/xtracker';
+    const GITHUB_FILE_PATH = 'data.json';
+
+    // Load from storage
+    function loadExpenses() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+            try {
+                expenses = JSON.parse(stored);
+            } catch (e) {
+                expenses = [];
+            }
+        } else {
+            expenses = [];
+        }
+    }
+
+    // Save to storage
+    function saveExpenses() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+    }
+
+    // ----- Helper Functions -----
+    function getCurrentMonth() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    }
+
+    function formatMonthYear(dateStr) {
+        const d = new Date(dateStr + '-01');
+        return d.toLocaleString('default', { month: 'short', year: 'numeric' });
+    }
+
+    function getUniqueMonths() {
+        const months = expenses.map(e => e.month).filter((v,i,a) => a.indexOf(v) === i);
+        return months.sort();
+    }
+
+    // Filter expenses by month
+    function getExpensesByMonth(month) {
+        return expenses.filter(e => e.month === month);
+    }
+
+    // ----- Add Expense -----
+    function addExpense(date, category, subcategory, amount, description) {
+        const d = new Date(date);
+        const month = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+        const expense = {
+            id: Date.now() + '-' + Math.random().toString(36).substr(2, 8),
+            date,
+            month,
+            category,
+            subcategory,
+            amount: parseFloat(amount),
+            description
+        };
+        expenses.push(expense);
+        saveExpenses();
+        renderAll();
+    }
+
+    // Delete expense
+    function deleteExpense(id) {
+        expenses = expenses.filter(e => e.id !== id);
+        saveExpenses();
+        renderAll();
+    }
+
+    // ----- Render Functions -----
+    function renderExpensesTable() {
+        const currentMonth = getCurrentMonth();
+        const monthExps = expenses.filter(e => e.month === currentMonth).sort((a,b) => b.date.localeCompare(a.date));
+        const tbody = document.getElementById('expensesBody');
+        tbody.innerHTML = '';
+
+        monthExps.forEach(exp => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${exp.date}</td>
+                <td>${exp.category}</td>
+                <td>${exp.subcategory}</td>
+                <td>$${exp.amount.toFixed(2)}</td>
+                <td>${exp.description || ''}</td>
+                <td><button class="delete-btn" data-id="${exp.id}">Delete</button></td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                deleteExpense(e.target.dataset.id);
+            });
+        });
+    }
+
+    function renderMonthlySummary() {
+        const monthSelector = document.getElementById('monthSelector');
+        const selectedMonth = monthSelector.value || getCurrentMonth();
+
+        const monthExps = getExpensesByMonth(selectedMonth);
+        const tbody = document.getElementById('monthlySummaryBody');
+        tbody.innerHTML = '';
+
+        let totalBudget = 0, totalActual = 0;
+
+        BUDGETS.forEach(item => {
+            const actual = monthExps
+                .filter(e => e.subcategory === item.subcategory)
+                .reduce((sum, e) => sum + e.amount, 0);
+
+            const remaining = item.budget - actual;
+            const percentUsed = item.budget > 0 ? (actual / item.budget * 100).toFixed(2) : 0;
+            const status = remaining >= 0 ? 'On Track' : 'Exceed';
+            const statusClass = status === 'Exceed' ? 'status-exceed' : 'status-ontrack';
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.category}</td>
+                <td>${item.subcategory}</td>
+                <td>$${item.budget.toFixed(2)}</td>
+                <td>$${actual.toFixed(2)}</td>
+                <td class="${remaining >= 0 ? 'positive' : 'negative'}">$${remaining.toFixed(2)}</td>
+                <td>${percentUsed}%</td>
+                <td><span class="${statusClass}">${status}</span></td>
+            `;
+            tbody.appendChild(row);
+
+            totalBudget += item.budget;
+            totalActual += actual;
+        });
+
+        document.getElementById('totalBudget').innerText = '$' + totalBudget.toFixed(2);
+        document.getElementById('totalActual').innerText = '$' + totalActual.toFixed(2);
+        const totalRemaining = totalBudget - totalActual;
+        document.getElementById('totalRemaining').innerText = '$' + totalRemaining.toFixed(2);
+        document.getElementById('totalRemaining').className = totalRemaining >= 0 ? 'positive' : 'negative';
+    }
+
+    function renderYearlySummary() {
+        const months = getUniqueMonths();
+        const tbody = document.getElementById('yearlyBody');
+        tbody.innerHTML = '';
+
+        if (months.length === 0) {
+            const row = document.createElement('tr');
+            row.innerHTML = '<td colspan="4" style="text-align: center;">No data yet</td>';
+            tbody.appendChild(row);
+            return;
+        }
+
+        months.forEach(month => {
+            const monthExps = getExpensesByMonth(month);
+            const actualTotal = monthExps.reduce((sum, e) => sum + e.amount, 0);
+            const remaining = TOTAL_BUDGET - actualTotal;
+
+            const [y, m] = month.split('-');
+            const monthName = new Date(y, m-1, 1).toLocaleString('default', { month: 'short', year: 'numeric' });
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${monthName}</td>
+                <td>$${TOTAL_BUDGET.toFixed(2)}</td>
+                <td>$${actualTotal.toFixed(2)}</td>
+                <td class="${remaining >= 0 ? 'positive' : 'negative'}">$${remaining.toFixed(2)}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function renderMonthSelector() {
+        const months = getUniqueMonths();
+        const selector = document.getElementById('monthSelector');
+        const currentMonth = getCurrentMonth();
+
+        selector.innerHTML = '';
+        if (months.length === 0) {
+            const option = document.createElement('option');
+            option.value = currentMonth;
+            option.textContent = formatMonthYear(currentMonth);
+            selector.appendChild(option);
+        } else {
+            months.forEach(month => {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = formatMonthYear(month);
+                selector.appendChild(option);
+            });
+        }
+    }
+
+    function renderAll() {
+        renderExpensesTable();
+        renderMonthSelector();
+        renderMonthlySummary();
+        renderYearlySummary();
+    }
+
+    // ----- Populate Category Dropdowns -----
+    function populateCategories() {
+        const catSelect = document.getElementById('expCategory');
+        const subcatSelect = document.getElementById('expSubcategory');
+
+        catSelect.innerHTML = '';
+        categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.textContent = cat;
+            catSelect.appendChild(opt);
+        });
+
+        function updateSubcategories() {
+            const cat = catSelect.value;
+            const subcats = BUDGETS.filter(b => b.category === cat).map(b => b.subcategory);
+            subcatSelect.innerHTML = '';
+            subcats.forEach(sub => {
+                const opt = document.createElement('option');
+                opt.value = sub;
+                opt.textContent = sub;
+                subcatSelect.appendChild(opt);
+            });
+        }
+
+        catSelect.addEventListener('change', updateSubcategories);
+        updateSubcategories();
+    }
+
+    // Set default date to today
+    function setDefaultDate() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth()+1).padStart(2,'0');
+        const dd = String(today.getDate()).padStart(2,'0');
+        document.getElementById('expDate').value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    // ----- Export/Import CSV -----
+    function exportCSV() {
+        let csv = "Date,Category,Subcategory,Amount,Description\n";
+        expenses.forEach(e => {
+            csv += `${e.date},${e.category},${e.subcategory},${e.amount},"${(e.description || '').replace(/"/g,'""')}"\n`;
+        });
+        const blob = new Blob([csv], {type: 'text/csv'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `budget_${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function importCSV(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const text = e.target.result;
+            const lines = text.split('\n').filter(l => l.trim() !== '');
+            lines.shift(); // remove header
+
+            const newExpenses = [];
+            lines.forEach(line => {
+                const parts = line.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+                if (parts.length >= 4) {
+                    const [date, cat, sub, amt, ...descParts] = parts;
+                    const amount = parseFloat(amt);
+                    const desc = descParts.join(',') || '';
+                    if (date && cat && sub && !isNaN(amount)) {
+                        const d = new Date(date);
+                        const month = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+                        newExpenses.push({
+                            id: Date.now() + '-' + Math.random().toString(36).substr(2, 8),
+                            date,
+                            month,
+                            category: cat,
+                            subcategory: sub,
+                            amount,
+                            description: desc
+                        });
+                    }
+                }
+            });
+
+            if (newExpenses.length > 0 && confirm(`Add ${newExpenses.length} expenses from CSV?`)) {
+                expenses = expenses.concat(newExpenses);
+                saveExpenses();
+                renderAll();
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function resetData() {
+        if (confirm('Delete ALL expenses? This cannot be undone.')) {
+            expenses = [];
+            saveExpenses();
+            renderAll();
+        }
+    }
+
+    // ----- GitHub Sync Functions with Enhanced Error Handling -----
+    async function validateToken(token) {
+        const url = `https://api.github.com/repos/${GITHUB_REPO}`;
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        if (!response.ok) {
+            if (response.status === 401) throw new Error('Token is invalid or expired');
+            if (response.status === 403) throw new Error('Token lacks permission (requires repo scope)');
+            if (response.status === 404) throw new Error(`Repository ${GITHUB_REPO} not found or not accessible`);
+            throw new Error(`GitHub API error: ${response.status}`);
+        }
+        return await response.json();
+    }
+
+    async function getGitHubFile(token) {
+        const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+
+        if (response.status === 404) {
+            return { exists: false, sha: null, content: null };
+        }
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to fetch file');
+        }
+
+        const data = await response.json();
+        return {
+            exists: true,
+            sha: data.sha,
+            content: atob(data.content)
+        };
+    }
+
+    async function updateGitHubFile(token, newContent, existingSha = null) {
+        const url = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+        const body = {
+            message: 'Update budget data',
+            content: btoa(newContent)
+        };
+        if (existingSha) {
+            body.sha = existingSha;
+        }
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Failed to update file');
+        }
+
+        return await response.json();
+    }
+
+    function showMessage(text, isSuccess = true) {
+        const msgDiv = document.getElementById('githubMessage');
+        msgDiv.style.display = 'block';
+        msgDiv.className = `message ${isSuccess ? 'success' : 'error'}`;
+        msgDiv.innerText = text;
+        setTimeout(() => {
+            msgDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    async function saveToGitHub() {
+        const token = document.getElementById('githubToken').value.trim();
+        if (!token) {
+            showMessage('Please enter your GitHub token.', false);
+            return;
+        }
+
+        try {
+            // First, validate token and repository access
+            await validateToken(token);
+            showMessage('Token valid, attempting to save...');
+
+            // Get current file to obtain SHA if it exists
+            let sha = null;
+            try {
+                const fileInfo = await getGitHubFile(token);
+                if (fileInfo.exists) {
+                    sha = fileInfo.sha;
+                }
+            } catch (err) {
+                // Ignore, proceed with new file
+            }
+
+            const content = JSON.stringify(expenses, null, 2);
+            await updateGitHubFile(token, content, sha);
+            showMessage('✅ Data successfully saved to GitHub!');
+        } catch (error) {
+            console.error(error);
+            showMessage('❌ Error: ' + error.message, false);
+        }
+    }
+
+    async function loadFromGitHub() {
+        const token = document.getElementById('githubToken').value.trim();
+        if (!token) {
+            showMessage('Please enter your GitHub token.', false);
+            return;
+        }
+
+        try {
+            // Validate token and repository
+            await validateToken(token);
+
+            const fileInfo = await getGitHubFile(token);
+            if (!fileInfo.exists) {
+                showMessage('No data file found in GitHub. Save first to create it.', false);
+                return;
+            }
+
+            const loadedExpenses = JSON.parse(fileInfo.content);
+            if (!Array.isArray(loadedExpenses)) {
+                throw new Error('Invalid data format');
+            }
+
+            if (confirm('Replace current data with data from GitHub? This cannot be undone.')) {
+                expenses = loadedExpenses;
+                saveExpenses();
+                renderAll();
+                showMessage('✅ Data successfully loaded from GitHub!');
+            }
+        } catch (error) {
+            console.error(error);
+            showMessage('❌ Error: ' + error.message, false);
+        }
+    }
+
+    // Tab switching
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+            });
+        });
+    }
+
+    // Initialize
+    function init() {
+        loadExpenses();
+        populateCategories();
+        setDefaultDate();
+        initTabs();
+        renderAll();
+
+        // Add expense
+        document.getElementById('addExpenseBtn').addEventListener('click', () => {
+            const date = document.getElementById('expDate').value;
+            const cat = document.getElementById('expCategory').value;
+            const sub = document.getElementById('expSubcategory').value;
+            const amount = document.getElementById('expAmount').value;
+            const desc = document.getElementById('expDesc').value;
+
+            if (!date || !cat || !sub || !amount || parseFloat(amount) <= 0) {
+                alert('Please fill all fields with valid amount.');
+                return;
+            }
+
+            addExpense(date, cat, sub, amount, desc);
+            document.getElementById('expAmount').value = '';
+            document.getElementById('expDesc').value = '';
+        });
+
+        // Month selector change
+        document.getElementById('monthSelector').addEventListener('change', renderMonthlySummary);
+
+        // Export
+        document.getElementById('exportBtn').addEventListener('click', exportCSV);
+
+        // Import
+        document.getElementById('importBtn').addEventListener('click', () => {
+            document.getElementById('importFile').click();
+        });
+        document.getElementById('importFile').addEventListener('change', (e) => {
+            if (e.target.files[0]) importCSV(e.target.files[0]);
+            e.target.value = '';
+        });
+
+        // Reset
+        document.getElementById('resetBtn').addEventListener('click', resetData);
+
+        // GitHub buttons
+        document.getElementById('saveToGitHubBtn').addEventListener('click', saveToGitHub);
+        document.getElementById('loadFromGitHubBtn').addEventListener('click', loadFromGitHub);
+    }
+
+    init();
+})();
+</script>
+</body>
+</html>
