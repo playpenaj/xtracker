@@ -1,1 +1,29 @@
-
+[
+  {
+    "id": "1773758672246-wpoupxm5",
+    "date": "2026-03-17",
+    "month": "2026-03",
+    "category": "Fixed Essentials",
+    "subcategory": "Rent",
+    "amount": 3000,
+    "description": ""
+  },
+  {
+    "id": "1773758731282-1j3hsan3",
+    "date": "2026-03-17",
+    "month": "2026-03",
+    "category": "Fixed Essentials",
+    "subcategory": "School Fees",
+    "amount": 5000,
+    "description": ""
+  },
+  {
+    "id": "1773761591080-eaob7zqk",
+    "date": "2026-03-17",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Utilities",
+    "amount": 40,
+    "description": ""
+  }
+]
