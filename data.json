@@ -52,5 +52,50 @@
     "subcategory": "Emergency Fund",
     "amount": 140,
     "description": "Bike fork"
+  },
+  {
+    "id": "1773765132818-26by77q3",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Groceries",
+    "amount": 434,
+    "description": ""
+  },
+  {
+    "id": "1773765157276-7yqz9rn4",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Eat Out",
+    "amount": 393,
+    "description": ""
+  },
+  {
+    "id": "1773765178572-no8lmqw3",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Eat Out",
+    "amount": 27,
+    "description": ""
+  },
+  {
+    "id": "1773765198401-ksa28vkm",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Household Items",
+    "amount": 30,
+    "description": ""
+  },
+  {
+    "id": "1773765219132-fq9hrq89",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Utilities",
+    "amount": 142,
+    "description": "March"
   }
 ]
