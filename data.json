@@ -1,29 +1,56 @@
 [
   {
-    "id": "1773758672246-wpoupxm5",
-    "date": "2026-03-17",
+    "id": "1773764284583-uofejgs7",
+    "date": "2026-03-18",
     "month": "2026-03",
     "category": "Fixed Essentials",
     "subcategory": "Rent",
-    "amount": 3000,
+    "amount": 3300,
     "description": ""
   },
   {
-    "id": "1773758731282-1j3hsan3",
-    "date": "2026-03-17",
+    "id": "1773764300121-jr1h29s5",
+    "date": "2026-03-18",
     "month": "2026-03",
     "category": "Fixed Essentials",
-    "subcategory": "School Fees",
-    "amount": 5000,
+    "subcategory": "Income Tax",
+    "amount": 680,
     "description": ""
   },
   {
-    "id": "1773761591080-eaob7zqk",
-    "date": "2026-03-17",
+    "id": "1773764446374-mk3ff57c",
+    "date": "2026-03-18",
     "month": "2026-03",
     "category": "Family Living",
-    "subcategory": "Utilities",
-    "amount": 40,
+    "subcategory": "Medical",
+    "amount": 160,
     "description": ""
+  },
+  {
+    "id": "1773764457356-46xk7gw3",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Mobile",
+    "amount": 24,
+    "description": ""
+  },
+  {
+    "id": "1773764469501-80x7sr0v",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Transport",
+    "amount": 20,
+    "description": ""
+  },
+  {
+    "id": "1773765048520-f2q3miv6",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Buffers",
+    "subcategory": "Emergency Fund",
+    "amount": 140,
+    "description": "Bike fork"
   }
 ]
