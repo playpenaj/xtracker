@@ -106,5 +106,149 @@
     "subcategory": "School Fees",
     "amount": 1500,
     "description": ""
+  },
+  {
+    "id": "1773889665887-von6vsjj",
+    "date": "2026-03-18",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Eat Out",
+    "amount": 4,
+    "description": ""
+  },
+  {
+    "id": "1773985129070-i5fb8gc5",
+    "date": "2026-03-20",
+    "month": "2026-03",
+    "category": "Investment",
+    "subcategory": "Annual Goal",
+    "amount": 3000,
+    "description": "KODAK"
+  },
+  {
+    "id": "1774014365328-i0avfrxc",
+    "date": "2026-03-20",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Medical",
+    "amount": 50,
+    "description": "Anju"
+  },
+  {
+    "id": "1774309384898-3i632i9v",
+    "date": "2026-03-23",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Eat Out",
+    "amount": 22,
+    "description": ""
+  },
+  {
+    "id": "1774309403180-nf7cj1pn",
+    "date": "2026-03-23",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Groceries",
+    "amount": 40,
+    "description": ""
+  },
+  {
+    "id": "1774309481347-ikj47e8l",
+    "date": "2026-03-23",
+    "month": "2026-03",
+    "category": "Investment",
+    "subcategory": "Annual Goal",
+    "amount": 3400,
+    "description": ""
+  },
+  {
+    "id": "1774917804202-tacnzyef",
+    "date": "2026-03-26",
+    "month": "2026-03",
+    "category": "Family Living",
+    "subcategory": "Groceries",
+    "amount": 10,
+    "description": ""
+  },
+  {
+    "id": "1774917865495-9kx7ozn5",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Fixed Essentials",
+    "subcategory": "Rent",
+    "amount": 3300,
+    "description": ""
+  },
+  {
+    "id": "1774917873171-at8ydxxo",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Fixed Essentials",
+    "subcategory": "School Fees",
+    "amount": 4368,
+    "description": ""
+  },
+  {
+    "id": "1774917890103-li18cs9s",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Fixed Essentials",
+    "subcategory": "Income Tax",
+    "amount": 680,
+    "description": ""
+  },
+  {
+    "id": "1774917946944-ddvnekbu",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Family Living",
+    "subcategory": "Eat Out",
+    "amount": 467,
+    "description": ""
+  },
+  {
+    "id": "1774917957225-5x70zc3v",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Family Living",
+    "subcategory": "Groceries",
+    "amount": 420,
+    "description": ""
+  },
+  {
+    "id": "1774917995032-z7o05ps0",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Family Living",
+    "subcategory": "Mobile",
+    "amount": 24,
+    "description": ""
+  },
+  {
+    "id": "1774918035440-38gg18z2",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Family Living",
+    "subcategory": "Household Items",
+    "amount": 15,
+    "description": ""
+  },
+  {
+    "id": "1774918101663-zjjqlsej",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Family Living",
+    "subcategory": "Transport",
+    "amount": 30,
+    "description": ""
+  },
+  {
+    "id": "1774918135642-xvi8wyaj",
+    "date": "2026-04-01",
+    "month": "2026-04",
+    "category": "Buffers",
+    "subcategory": "Entertainment Buffer",
+    "amount": 50,
+    "description": ""
   }
 ]
