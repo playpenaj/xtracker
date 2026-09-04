@@ -142,9 +142,9 @@
 
 <header>
   <h1>Daily Expense Capture</h1>
-  <p>Quick entry on the go — export anytime to feed your Excel tracker</p>
+  <p>Auto-saves in this browser — export anytime to feed your Excel tracker</p>
   <div class="toolbar">
-    <button class="btn-export" id="exportBtn">⬇ Export to Excel</button>
+    <button class="btn-export" id="exportBtn" title="Always downloads as expense-transactions.xlsx — your browser may add (1) etc. if a copy already exists in Downloads; delete/replace the old one if you want a clean single copy.">⬇ Export to Excel</button>
     <button class="btn-import" id="importBtn">⬆ Import</button>
     <input type="file" id="importFile" accept=".xlsx,.xls,.csv">
     <button class="btn-clear" id="clearBtn">Clear All</button>
@@ -274,13 +274,46 @@ const EXPORT_HEADERS = ["Date","Category","Description","Payment Method","Amount
 
 /* ============================================================
    STATE
-   Note: this app does not use browser storage — nothing is
-   saved automatically. Use Export before closing the tab, and
-   Import to pick up where you left off (or to load rows already
-   sitting in your Excel Transactions sheet).
+   Entries auto-save to this browser's localStorage on every
+   change, and reload automatically next time you open this file
+   in the same browser. Export/Import remain available for moving
+   data to Excel or to a different browser/device.
    ============================================================ */
 let entries = []; // {id, date:'YYYY-MM-DD', category, description, payment, amount, unexpected}
 let nextId = 1;
+const STORAGE_KEY = "dailyExpenseCapture_entries_v1";
+const STORAGE_NEXTID_KEY = "dailyExpenseCapture_nextId_v1";
+let storageAvailable = true;
+
+function saveToStorage(){
+  if (!storageAvailable) return;
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    localStorage.setItem(STORAGE_NEXTID_KEY, String(nextId));
+  } catch(err){
+    storageAvailable = false;
+    console.warn("localStorage save failed:", err);
+    showToast("Note: this browser is blocking saved storage — remember to Export before closing.");
+  }
+}
+
+function loadFromStorage(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const rawNextId = localStorage.getItem(STORAGE_NEXTID_KEY);
+    if (raw){
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) entries = parsed;
+    }
+    if (rawNextId){
+      const n = parseInt(rawNextId, 10);
+      if (!isNaN(n)) nextId = n;
+    }
+  } catch(err){
+    storageAvailable = false;
+    console.warn("localStorage load failed:", err);
+  }
+}
 
 /* ============================================================
    INIT
@@ -320,6 +353,7 @@ function initApp(){
   appInitialized = true;
 
   document.getElementById("f-date").value = todayISO();
+  loadFromStorage();
   initCategoryDropdown();
   initYearDropdown();
   renderAll();
@@ -394,11 +428,13 @@ function onAddEntry(e){
   document.getElementById("f-category").focus();
 
   showToast("Expense added ✓");
+  saveToStorage();
   renderAll();
 }
 
 function deleteEntry(id){
   entries = entries.filter(en => en.id !== id);
+  saveToStorage();
   renderAll();
 }
 
@@ -593,7 +629,7 @@ function exportToExcel(){
 
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Transactions");
-  const filename = "expense-export-" + todayISO() + ".xlsx";
+  const filename = "expense-transactions.xlsx"; // fixed name every time, so re-downloading can replace the previous file
   XLSX.writeFile(wb, filename);
   showToast("Exported " + entries.length + " rows → " + filename);
 }
@@ -665,6 +701,7 @@ function onImportFile(e){
       }
 
       showToast(imported > 0 ? `Imported ${imported} rows ✓` : "No valid rows found to import.");
+      saveToStorage();
       renderAll();
     } catch(err){
       console.error(err);
@@ -701,8 +738,9 @@ function parseImportedDate(val){
    ============================================================ */
 function onClearAll(){
   if (entries.length === 0) return;
-  if (confirm("Remove all " + entries.length + " logged expenses from this session? Export first if you want to keep them.")){
+  if (confirm("Remove all " + entries.length + " logged expenses (including the auto-saved copy in this browser)? Export first if you want to keep them.")){
     entries = [];
+    saveToStorage();
     renderAll();
     showToast("All entries cleared.");
   }
